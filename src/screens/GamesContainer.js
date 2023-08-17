@@ -1,11 +1,21 @@
-import React, {useEffect} from 'react';
-import {View, Text, FlatList, StyleSheet, StatusBar} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  StatusBar,
+  Image,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import {fetchGames} from '../redux/store/gamesSlice';
-import Card from '../components/cards/Card';
 import LinearGradient from 'react-native-linear-gradient';
 
-const GamesContainer = () => {
+import {fetchGames} from '../redux/store/gamesSlice';
+import Card from '../components/cards/Card';
+
+const GamesContainer = ({navigation}) => {
   const dispatch = useDispatch();
   const gamesList = useSelector(state => state.games.gamesList);
   const loading = useSelector(state => state.games.loading);
@@ -19,13 +29,21 @@ const GamesContainer = () => {
       colors={['#192330', '#283245']}
       style={styles.linearGradient}>
       <StatusBar backgroundColor={'#192330'} />
-
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerText}>Game List</Text>
+          <View style={styles.headerRow}>
+            <Text style={styles.headerText}>Game List</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('FilterScreen')}>
+              <Image
+                source={require('../assets/images/sliders.png')}
+                style={styles.sliderImage}
+              />
+            </TouchableOpacity>
+          </View>
           <Text style={styles.subHeaderText}>
-            Find the best prices on digital games.{'\n'}We have just what you're
-            looking for!
+            Find the best prices on digital games.
+            {'\n'}We have just what you're looking for!
           </Text>
         </View>
         {loading ? (
@@ -34,7 +52,14 @@ const GamesContainer = () => {
           <FlatList
             data={gamesList}
             keyExtractor={item => item.dealID}
-            renderItem={({item}) => <Card game={item} />}
+            renderItem={({item}) => (
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('GamesDetails', {game: item})
+                }>
+                <Card game={item} />
+              </TouchableOpacity>
+            )}
           />
         )}
       </View>
@@ -51,9 +76,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     width: '100%',
+    top: Platform.select({ios: 10, android: 5}),
   },
   header: {
-    height: 150,
+    height: Platform.select({ios: 210, android: 150}),
     width: '100%',
     borderColor: 'white',
     justifyContent: 'center',
@@ -63,12 +89,23 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     display: 'flex',
   },
+  headerRow: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   headerText: {
     fontSize: 32,
     color: '#EBFF01',
     fontWeight: '100',
-    fontFamily: 'Manrope-Light ',
+    fontFamily: 'Manrope-Light',
     lineHeight: 43.71,
+  },
+  sliderImage: {
+    height: 20,
+    width: 20,
+    tintColor: '#FFFFFF',
   },
   subHeaderText: {
     fontSize: 18,
