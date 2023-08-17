@@ -1,7 +1,10 @@
-import {View, Text, Image, StyleSheet} from 'react-native';
 import React from 'react';
+import {View, Text, Image, StyleSheet, Dimensions} from 'react-native';
 import {AirbnbRating} from 'react-native-ratings';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const Card = ({game}) => {
   const ratingPercent = parseFloat(game.steamRatingPercent);
@@ -13,28 +16,20 @@ const Card = ({game}) => {
         <Image source={{uri: game.thumb}} style={styles.image} />
       </View>
       <View style={styles.textContainer}>
-        <View style={{width: '100%', height: 33}}>
+        <View style={styles.titleContainer}>
           <Text style={styles.title}>{game.title}</Text>
         </View>
         <View style={styles.ratingContainer}>
           <AirbnbRating
             count={5}
             defaultRating={ratingStars}
-            size={20}
+            size={windowWidth * 0.05}
             showRating={false}
             isDisabled={true}
             starStyle={styles.star}
           />
         </View>
-        <View
-          style={{
-            height: 50,
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
+        <View style={styles.priceButtonContainer}>
           <View style={styles.priceContainer}>
             <Text style={styles.normalPrice}>{game.normalPrice}€</Text>
             <Text style={styles.salePrice}>{game.salePrice}€</Text>
@@ -42,7 +37,7 @@ const Card = ({game}) => {
           <TouchableOpacity style={styles.buttonContainer}>
             <Image
               source={require('../../assets/images/like.png')}
-              style={{height: 20, width: 20}}
+              style={styles.buttonImage}
             />
           </TouchableOpacity>
         </View>
@@ -54,29 +49,28 @@ const Card = ({game}) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    width: 360,
-    height: 120,
+    width: windowWidth - 20,
+    height: 110,
     borderRadius: 12,
     borderColor: '#ccc',
-    marginTop: 20,
+    marginTop: windowWidth * 0.05,
     backgroundColor: '#2D3A4F',
-    marginBottom: 20,
+    marginBottom: windowHeight * 0.05,
     overflow: 'visible',
   },
   imageContainer: {
-    width: 120,
-    height: 100,
+    width: windowWidth * 0.3,
+    height: windowHeight * 0.25,
     marginRight: 10,
     overflow: 'visible',
   },
   image: {
-    width: 120,
-    height: 120,
+    width: windowWidth * 0.3,
+    height: windowHeight * 0.15,
     borderRadius: 14,
-    position: 'relative',
+    position: 'absolute',
     top: -20,
-    paddingLeft: -20,
-    resizeMode: 'contain',
+    resizeMode: 'cover',
   },
   textContainer: {
     flex: 1,
@@ -85,11 +79,15 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
   },
+  titleContainer: {
+    width: '100%',
+    height: windowWidth * 0.1,
+  },
   title: {
-    fontSize: 15,
+    fontSize: windowWidth * 0.035,
     fontWeight: '800',
     marginBottom: 5,
-    lineHeight: 38.86,
+    lineHeight: windowWidth * 0.1,
     letterSpacing: 0.2,
     fontFamily: 'Manrope-ExtraLight',
     color: 'white',
@@ -102,8 +100,15 @@ const styles = StyleSheet.create({
   },
   star: {
     margin: 3,
-    height: 12.5,
-    width: 11.89,
+    height: windowWidth * 0.035,
+    width: windowWidth * 0.033,
+  },
+  priceButtonContainer: {
+    height: windowWidth * 0.125,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   priceContainer: {
     flexDirection: 'row',
@@ -125,21 +130,17 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     alignSelf: 'flex-end',
-    height: 50,
-    width: 50,
+    height: windowWidth * 0.125,
+    width: windowWidth * 0.125,
     justifyContent: 'center',
     alignItems: 'center',
-    display: 'flex',
     backgroundColor: '#3D4B64',
     borderTopLeftRadius: 15,
     paddingHorizontal: 5,
   },
-  button: {
-    backgroundColor: 'blue',
-    color: 'white',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 5,
+  buttonImage: {
+    height: windowWidth * 0.05,
+    width: windowWidth * 0.05,
   },
 });
 
