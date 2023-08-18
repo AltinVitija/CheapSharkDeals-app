@@ -1,4 +1,4 @@
-import {AirbnbRating} from 'react-native-ratings';
+import React from 'react';
 import {
   View,
   Text,
@@ -7,175 +7,102 @@ import {
   StyleSheet,
   Dimensions,
 } from 'react-native';
-import React, {useState} from 'react';
+import StarRatingRow from '../starRating/StarRating';
+import InputRange from '../../components/inputrange/InputRange'; // Update the path accordingly
+
 const windowWidth = Dimensions.get('window').width;
 
-const Filter = ({onPressShowResult}) => {
-  // const [priceRange, setPriceRange] = useState({min: 0, max: 250});
+const Filter = ({
+  onPressShowResult,
+  valueUpperPrice,
+  valueLowerPrice,
+  onChangeTextLower,
+  onChangeTextUpper,
+  onStarRatingPress,
+}) => {
+  const renderStarRatingRows = () => {
+    const starRatings = [1, 2, 3, 4, 5];
+    const rows = [];
 
-  // const handlePressStar = rating => {
-  //   setSelectedRating(rating);
-  //   handleRatingChange(rating); // Call the prop function to update FilterScreen state
-  // };
+    for (let i = 0; i < starRatings.length - 1; i += 4) {
+      const row = starRatings
+        .slice(i, i + 4)
+        .map(rating => (
+          <StarRatingRow
+            key={rating}
+            count={rating}
+            defaultRating={rating}
+            onPress={() => onStarRatingPress(rating)}
+          />
+        ));
+      rows.push(
+        <View key={i} style={styles.ratingRow}>
+          {row}
+        </View>,
+      );
+    }
 
-  // const handleMinPriceChange = value => {
-  //   setPriceRange(prevRange => ({...prevRange, min: value}));
-  // };
+    const lastRowStyle = {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 10,
+      right: 100,
+    };
 
-  // const handleMaxPriceChange = value => {
-  //   setPriceRange(prevRange => ({...prevRange, max: value}));
-  // };
+    const lastRow = (
+      <View key={starRatings.length} style={lastRowStyle}>
+        <StarRatingRow
+          count={5}
+          defaultRating={5}
+          onPress={() => onStarRatingPress(5)}
+        />
+      </View>
+    );
+
+    rows.push(lastRow);
+    return rows;
+  };
 
   return (
-    <View style={{flex: 1}}>
-      <Text>Price</Text>
-      {/* <TextInput
-        placeholder="Min Price"
-        keyboardType="numeric"
-        value={priceRange.min.toString()}
-        onChangeText={handleMinPriceChange}
-      />
-      <TextInput
-        placeholder="Max Price"
-        keyboardType="numeric"
-        value={priceRange.max.toString()}
-        onChangeText={handleMaxPriceChange}
-      /> */}
-      <Text style={styles.titleRate}>Rate</Text>
-
-      {/* <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-around',
-          paddingHorizontal: 10,
-        }}>
-        <TouchableOpacity
-          style={{
-            height: 31,
-            width: 31,
-            borderRadius: 32,
-            backgroundColor: '#384151',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-          onPress={() => handlePressStar(1)}>
-          <AirbnbRating
-            showRating={false}
-            count={1}
-            defaultRating={1}
-            size={15}
-            isDisabled={true}
+    <View style={styles.container}>
+      <View style={styles.priceSection}>
+        <View style={styles.section}>
+          <Text style={styles.title}>Price</Text>
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="From"
+            placeholderTextColor="black"
+            keyboardType="numeric"
+            value={valueLowerPrice}
+            onChangeText={onChangeTextLower}
+            style={styles.input}
           />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            height: 31,
-            width: 54,
-            borderRadius: 32,
-            backgroundColor: '#384151',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-          onPress={() => handlePressStar(2)}>
-          <AirbnbRating
-            showRating={false}
-            count={2}
-            defaultRating={2}
-            size={15}
-            isDisabled={true}
+          <TextInput
+            placeholder="To"
+            keyboardType="numeric"
+            value={valueUpperPrice}
+            onChangeText={onChangeTextUpper}
+            style={styles.input}
           />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            height: 31,
-            width: 77,
-            borderRadius: 32,
-            backgroundColor: '#384151',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-          onPress={() => handlePressStar(3)}>
-          <AirbnbRating
-            showRating={false}
-            count={3}
-            defaultRating={3}
-            size={15}
-            isDisabled={true}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            height: 31,
-            width: 100,
-            borderRadius: 32,
-            backgroundColor: '#384151',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-          onPress={() => handlePressStar(4)}>
-          <AirbnbRating
-            showRating={false}
-            count={4}
-            defaultRating={4}
-            size={15}
-            isDisabled={true}
-          />
-        </TouchableOpacity>
+        </View>
+        <InputRange
+          valueLower={valueLowerPrice}
+          valueUpper={valueUpperPrice}
+          onValueChangeLower={onChangeTextLower}
+          onValueChangeUpper={onChangeTextUpper}
+        />
       </View>
-      <View
-        style={{
-          height: 70,
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'flex-start',
-          paddingHorizontal: 30,
-        }}>
-        <TouchableOpacity
-          style={{
-            height: 31,
-            width: 123,
-            borderRadius: 32,
-            backgroundColor: '#384151',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-          onPress={() => handlePressStar(5)}>
-          <AirbnbRating
-            showRating={false}
-            count={5}
-            defaultRating={5}
-            size={15}
-            isDisabled={true}
-          />
-        </TouchableOpacity>
-      </View> */}
-      <View
-        style={{
-          height: 200,
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+      <View style={styles.rateSection}>
+        <View style={styles.section}>
+          <Text style={styles.title}>Rate</Text>
+        </View>
+        <View style={styles.ratingContainer}>{renderStarRatingRows()}</View>
         <TouchableOpacity
           onPress={onPressShowResult}
-          style={{
-            height: 52,
-            width: 331,
-            backgroundColor: '#EBFF01',
-            borderRadius: 32,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text
-            style={{
-              color: 'black',
-              fontSize: 18,
-              fontFamily: 'Manrope',
-              fontWeight: '700',
-            }}>
-            Show Result
-          </Text>
+          style={styles.showResultButton}>
+          <Text style={styles.buttonText}>Show Result</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -183,13 +110,76 @@ const Filter = ({onPressShowResult}) => {
 };
 
 const styles = StyleSheet.create({
-  titleRate: {
-    fontFamily: 'Manrope-Light',
+  container: {
+    flex: 1,
+  },
+  section: {
+    height: 20,
+    width: '100%',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  priceSection: {
+    height: 155,
+    marginBottom: 10,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    height: 100,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  input: {
+    width: 156,
+    height: 45,
+    flexShrink: 0,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#FFF',
+    opacity: 0.2,
+    color: 'white',
+    top: -10,
+  },
+  rateSection: {
+    height: 220,
+  },
+  title: {
+    fontFamily: 'Manrope',
     fontSize: windowWidth * 0.04,
     fontWeight: '800',
     lineHeight: windowWidth * 0.05,
     letterSpacing: 1,
     color: '#FFFFFF',
   },
+  ratingContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  ratingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    marginBottom: 25,
+    top: 10,
+  },
+  showResultButton: {
+    height: 52,
+    width: 331,
+    backgroundColor: '#EBFF01',
+    borderRadius: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginTop: 'auto',
+    marginBottom: 20,
+  },
+  buttonText: {
+    color: 'black',
+    fontSize: 18,
+    fontFamily: 'Manrope',
+    fontWeight: '700',
+  },
 });
+
 export default Filter;

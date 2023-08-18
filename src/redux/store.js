@@ -8,7 +8,6 @@ import storeReducer from './store/storeSlice';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['games', 'stores'],
 };
 
 const rootReducer = combineReducers({

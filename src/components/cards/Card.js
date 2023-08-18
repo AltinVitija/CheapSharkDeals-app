@@ -1,19 +1,29 @@
-import React from 'react';
-import {View, Text, Image, StyleSheet, Dimensions} from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
 import {AirbnbRating} from 'react-native-ratings';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const Card = ({game}) => {
+const Card = ({game, navigation}) => {
   const ratingPercent = parseFloat(game.steamRatingPercent);
   const ratingStars = (ratingPercent / 100) * 5;
-
+  const [liked, setLiked] = useState(false);
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <Image source={{uri: game.thumb}} style={styles.image} />
+        <TouchableOpacity
+          style={{height: 90, width: '100%'}}
+          onPress={() => navigation.navigate('GamesDetails', {game})}>
+          <Image source={{uri: game.thumb}} style={styles.image} />
+        </TouchableOpacity>
       </View>
       <View style={styles.textContainer}>
         <View style={styles.titleContainer}>
@@ -34,11 +44,23 @@ const Card = ({game}) => {
             <Text style={styles.normalPrice}>{game.normalPrice}€</Text>
             <Text style={styles.salePrice}>{game.salePrice}€</Text>
           </View>
-          <TouchableOpacity style={styles.buttonContainer}>
-            <Image
-              source={require('../../assets/images/like.png')}
-              style={styles.buttonImage}
-            />
+          <TouchableOpacity
+            style={[
+              styles.likeButtonContainer,
+              liked ? styles.likedButtonContainer : null,
+            ]}
+            onPress={() => setLiked(!liked)}>
+            {liked ? (
+              <Image
+                source={require('../../assets/images/like.png')}
+                style={styles.likeButtonImage}
+              />
+            ) : (
+              <Image
+                source={require('../../assets/images/likeempty.png')}
+                style={styles.likeButtonImage}
+              />
+            )}
           </TouchableOpacity>
         </View>
       </View>
@@ -49,14 +71,14 @@ const Card = ({game}) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    width: windowWidth - 20,
+    width: windowWidth - 40,
     height: 110,
     borderRadius: 12,
     borderColor: '#ccc',
     marginTop: windowWidth * 0.05,
     backgroundColor: '#2D3A4F',
     marginBottom: windowHeight * 0.05,
-    overflow: 'visible',
+    mixBlendMode: 'soft-light',
   },
   imageContainer: {
     width: windowWidth * 0.3,
@@ -65,13 +87,31 @@ const styles = StyleSheet.create({
     overflow: 'visible',
   },
   image: {
-    width: windowWidth * 0.3,
-    height: windowHeight * 0.15,
     borderRadius: 14,
-    position: 'absolute',
     top: -20,
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
     resizeMode: 'cover',
   },
+  likeButtonContainer: {
+    height: windowWidth * 0.125,
+    width: windowWidth * 0.125,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#3D4B64',
+    borderTopLeftRadius: 15,
+    paddingHorizontal: 5,
+  },
+
+  likeButtonImage: {
+    height: windowWidth * 0.05,
+    width: windowWidth * 0.05,
+  },
+  likedButtonImage: {
+    tintColor: 'red', // Customize the tint color for liked state
+  },
+
   textContainer: {
     flex: 1,
     justifyContent: 'space-between',
@@ -89,7 +129,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     lineHeight: windowWidth * 0.1,
     letterSpacing: 0.2,
-    fontFamily: 'Manrope-ExtraLight',
+    fontFamily: 'Manrope',
     color: 'white',
     paddingHorizontal: 5,
   },
@@ -120,12 +160,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
     color: '#3D4B64',
     fontWeight: '500',
-    fontFamily: 'Manrope-ExtraLight',
+    fontFamily: 'Manrope',
   },
   salePrice: {
     color: '#FFFFFF',
     fontWeight: '500',
-    fontFamily: 'Manrope-ExtraLight',
+    fontFamily: 'Manrope',
     paddingHorizontal: 1,
   },
   buttonContainer: {

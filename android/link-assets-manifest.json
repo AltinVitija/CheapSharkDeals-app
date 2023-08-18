@@ -28,6 +28,10 @@
     {
       "path": "src/assets/fonts/Manrope-SemiBold.ttf",
       "sha1": "e423e112f4832916b05308934c10aa84fd14c607"
+    },
+    {
+      "path": "src/assets/fonts/thin.otf",
+      "sha1": "27509d9358e754b4685b37a4027f1cb6a41b13cc"
     }
   ]
 }
