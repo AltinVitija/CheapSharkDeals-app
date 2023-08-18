@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    height: 240,
+    height: 300,
     width: windowWidth,
   },
   headerClose: {

@@ -11,6 +11,7 @@ import StarRatingRow from '../starRating/StarRating';
 import InputRange from '../../components/inputrange/InputRange'; // Update the path accordingly
 
 const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const Filter = ({
   onPressShowResult,
@@ -73,7 +74,7 @@ const Filter = ({
         <View style={styles.inputContainer}>
           <TextInput
             placeholder="From"
-            placeholderTextColor="black"
+            placeholderTextColor="white"
             keyboardType="numeric"
             value={valueLowerPrice}
             onChangeText={onChangeTextLower}
@@ -82,6 +83,7 @@ const Filter = ({
           <TextInput
             placeholder="To"
             keyboardType="numeric"
+            placeholderTextColor="white"
             value={valueUpperPrice}
             onChangeText={onChangeTextUpper}
             style={styles.input}
@@ -122,10 +124,11 @@ const styles = StyleSheet.create({
   priceSection: {
     height: 155,
     marginBottom: 10,
+    top: -30,
   },
   inputContainer: {
     flexDirection: 'row',
-    height: 100,
+    height: 110,
     justifyContent: 'space-around',
     alignItems: 'center',
   },
@@ -138,10 +141,11 @@ const styles = StyleSheet.create({
     borderColor: '#FFF',
     opacity: 0.2,
     color: 'white',
-    top: -10,
+    top: -20,
+    paddingHorizontal: 10,
   },
   rateSection: {
-    height: 220,
+    height: windowHeight * 0.29,
   },
   title: {
     fontFamily: 'Manrope',
@@ -173,6 +177,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 'auto',
     marginBottom: 20,
+    top: windowHeight * 0.01,
   },
   buttonText: {
     color: 'black',

@@ -44,7 +44,9 @@ const GamesDetails = ({route, navigation}) => {
         <StatusBar translucent backgroundColor="transparent" />
         {/* Header */}
         <View style={styles.header}>
-          <Image source={{uri: game.thumb}} style={styles.backgroundImage} />
+          <View style={styles.backgroundImageContainer}>
+            <Image source={{uri: game.thumb}} style={styles.backgroundImage} />
+          </View>
           <Image source={{uri: game.thumb}} style={styles.profileImage} />
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
             <Image
@@ -147,18 +149,26 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'relative',
   },
-  backgroundImage: {
+  backgroundImageContainer: {
     ...StyleSheet.absoluteFillObject,
     width: '100%',
-    height: '75%',
+    height: '100%',
+    borderTopLeftRadius: 14,
+    borderTopRightRadius: 14,
+    overflow: 'hidden',
+  },
+
+  backgroundImage: {
+    width: '100%',
+    height: '100%',
     resizeMode: 'cover',
   },
   profileImage: {
-    width: windowWidth * 0.35,
-    height: windowHeight * 0.2,
+    width: '27%',
+    height: '50%',
     borderRadius: 12,
     position: 'absolute',
-    top: windowHeight * 0.16,
+    top: windowHeight * 0.25,
     resizeMode: 'contain',
     left: windowWidth * 0.05,
   },
@@ -175,20 +185,21 @@ const styles = StyleSheet.create({
     width: 24,
   },
   middle: {
-    height: windowHeight * 0.45,
+    height: windowHeight * 0.3,
     width: '100%',
     overflow: 'visible',
   },
   infoContainer: {
-    height: windowHeight * 0.15,
+    height: windowHeight * 0.2,
     width: '100%',
     paddingHorizontal: 20,
     justifyContent: 'center',
+    top: 30,
   },
   gameTitle: {
     fontFamily: 'Manrope',
     fontWeight: '300',
-    fontSize: 28,
+    fontSize: 30,
     lineHeight: 32,
     color: '#EBFF01',
   },
@@ -199,7 +210,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   priceContainer: {
-    height: windowHeight * 0.15,
+    height: windowHeight * 0.17,
     width: '100%',
     paddingHorizontal: 20,
   },
@@ -217,7 +228,7 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     letterSpacing: 2,
     color: '#80858B',
-    paddingHorizontal: 5,
+    paddingHorizontal: 3,
   },
   footer: {
     height: windowHeight * 0.16,
