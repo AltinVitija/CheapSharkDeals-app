@@ -5,20 +5,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const fetchGames = createAsyncThunk(
   'games/fetchGames',
   async (_, {getState}) => {
-    const state = getState();
-    const searchQuery = state.games.searchQuery;
-    const selectedRating = state.games.selectedRating;
+    const {searchQuery, steamRatingPercent, upperPrice, lowerPrice} =
+      getState().games;
 
-    const response = await gameAPI.get(
-      `1.0/deals?title=${searchQuery}&storeID=1&upperPrice=15&rating=${selectedRating}`,
-    );
-    const gamesWithPrices = response.data.map(game => ({
-      ...game,
-      salePrice: game.salePrice,
-      normalPrice: game.normalPrice,
-    }));
+    try {
+      const response = await gameAPI.get(
+        `1.0/deals?title=${searchQuery}&storeID=1&upperPrice=${upperPrice}&lowerPrice=${lowerPrice}&steamRatingPercent=${steamRatingPercent}`,
+      );
 
-    return gamesWithPrices;
+      return response.data.map(game => ({
+        ...game,
+        salePrice: game.salePrice,
+        normalPrice: game.normalPrice,
+      }));
+    } catch (error) {
+      throw error;
+    }
   },
 );
 
@@ -29,40 +31,51 @@ const gamesSlice = createSlice({
     loading: false,
     error: null,
     searchQuery: '',
-    selectedRating: 0,
+    steamRatingPercent: 0,
+    upperPrice: 15,
+    lowerPrice: 0,
   },
   reducers: {
-    setSearchQuery: (state, action) => {
-      state.searchQuery = action.payload;
+    setSearchQuery: (state, {payload}) => {
+      state.searchQuery = payload;
     },
-    setMaxPrice: (state, action) => {
-      state.searchQuery = action.payload;
+    setUpperPrice: (state, {payload}) => {
+      state.upperPrice = payload;
     },
-    setMinPrice: (state, action) => {
-      state.searchQuery = action.payload;
+    setLowerPrice: (state, {payload}) => {
+      state.lowerPrice = payload;
     },
-    setSelectedRating: (state, action) => {
-      state.selectedRating = action.payload;
+    setSelectedRating: (state, {payload}) => {
+      state.steamRatingPercent = payload;
+    },
+    clearGamesList: state => {
+      state.gamesList = [];
     },
   },
-
   extraReducers: builder => {
     builder
       .addCase(fetchGames.pending, state => {
         state.loading = true;
+        state.error = null;
       })
-      .addCase(fetchGames.fulfilled, (state, action) => {
+      .addCase(fetchGames.fulfilled, (state, {payload}) => {
         state.loading = false;
-        state.gamesList = action.payload;
-
-        AsyncStorage.setItem('cachedGamesList', JSON.stringify(action.payload));
+        state.gamesList = payload;
+        AsyncStorage.setItem('cachedGamesList', JSON.stringify(payload));
       })
-      .addCase(fetchGames.rejected, (state, action) => {
+      .addCase(fetchGames.rejected, (state, {error}) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = error.message;
       });
   },
 });
-export const {setSearchQuery, setSelectedRating} = gamesSlice.actions;
+
+export const {
+  setSearchQuery,
+  setSelectedRating,
+  setUpperPrice,
+  setLowerPrice,
+  clearGamesList,
+} = gamesSlice.actions;
 
 export default gamesSlice.reducer;

@@ -5,11 +5,11 @@ import {
   StatusBar,
   Image,
   TouchableOpacity,
-  TextInput,
   Dimensions,
-  Modal,
+  ActivityIndicator,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+
 import LinearGradient from 'react-native-linear-gradient';
 import SearchBar from '../components/searchbar/SearchBar';
 import Filter from '../components/filters/Filter';
@@ -18,31 +18,70 @@ import {
   fetchGames,
   setSearchQuery,
   setSelectedRating,
+  setUpperPrice,
+  setLowerPrice,
 } from '../redux/store/gamesSlice';
-import {AirbnbRating} from 'react-native-ratings';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const FilterScreen = ({navigation}) => {
+  const [isEmptyResult, setIsEmptyResult] = useState(false);
+
   const dispatch = useDispatch();
   const searchQuery = useSelector(state => state.games.searchQuery);
+  const steamRatingPercent = useSelector(
+    state => state.games.steamRatingPercent,
+  );
+  const loading = useSelector(state => state.games.loading);
 
-  const selectedRating = useSelector(state => state.games.selectedRating);
+  const upperPrice = useSelector(state => state.games.upperPrice);
+  const lowerPrice = useSelector(state => state.games.lowerPrice);
 
   const handleSearchChange = query => {
     dispatch(setSearchQuery(query));
   };
+  useEffect(() => {
+    return () => {
+      dispatch(setSearchQuery(null));
+      dispatch(setSelectedRating(0));
+      dispatch(setUpperPrice(15));
+      dispatch(setLowerPrice(0));
 
-  const handlePressStar = rating => {
+      handleSearchChange(null);
+    };
+  }, []);
+
+  const handleUpperPrice = price => {
+    dispatch(setUpperPrice(price));
+  };
+
+  const handleLowerPrice = price => {
+    dispatch(setLowerPrice(price));
+  };
+  const handlePressStar = (rating, steamRatingPercent) => {
     console.log('Selected Rating:', rating);
     dispatch(setSelectedRating(rating));
   };
+  const handleResetFilters = async () => {
+    dispatch(setSearchQuery(null));
+    dispatch(setSelectedRating(0));
+    dispatch(setUpperPrice(15));
+    dispatch(setLowerPrice(0));
 
-  const handleShowResult = () => {
-    dispatch(fetchGames(selectedRating));
-    navigation.navigate('GamesContainer');
+    handleSearchChange(null);
+    // dispatch(clearGamesList());
+
+    dispatch(fetchGames());
   };
+
+  const handleShowResult = async () => {
+    const response = await dispatch(fetchGames());
+    const isEmptyResult = response.payload.length === 0;
+    setIsEmptyResult(isEmptyResult);
+    navigation.navigate('GamesContainer', {isEmptyResult});
+  };
+
   return (
     <LinearGradient
       colors={['#192330', '#283245']}
@@ -58,8 +97,14 @@ const FilterScreen = ({navigation}) => {
           </View>
           <View style={styles.headerTitleReset}>
             <Text style={styles.txtFilter}>Filters</Text>
-            <TouchableOpacity style={styles.btnReset}>
-              <Text style={styles.txtReset}>Reset</Text>
+            <TouchableOpacity
+              style={styles.btnReset}
+              onPress={handleResetFilters}>
+              {loading ? (
+                <ActivityIndicator size="small" color="#FFFFFF" />
+              ) : (
+                <Text style={styles.txtReset}>Reset</Text>
+              )}
             </TouchableOpacity>
           </View>
           <View>
@@ -67,114 +112,16 @@ const FilterScreen = ({navigation}) => {
           </View>
         </View>
         <View style={styles.middle}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-around',
-              paddingHorizontal: 10,
-            }}>
-            <TouchableOpacity
-              style={{
-                height: 31,
-                width: 31,
-                borderRadius: 32,
-                backgroundColor: '#384151',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-              onPress={() => handlePressStar(1)}>
-              <AirbnbRating
-                showRating={false}
-                count={1}
-                defaultRating={1}
-                size={15}
-                isDisabled={true}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                height: 31,
-                width: 54,
-                borderRadius: 32,
-                backgroundColor: '#384151',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-              onPress={() => handlePressStar(2)}>
-              <AirbnbRating
-                showRating={false}
-                count={2}
-                defaultRating={2}
-                size={15}
-                isDisabled={true}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                height: 31,
-                width: 77,
-                borderRadius: 32,
-                backgroundColor: '#384151',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-              onPress={() => handlePressStar(3)}>
-              <AirbnbRating
-                showRating={false}
-                count={3}
-                defaultRating={3}
-                size={15}
-                isDisabled={true}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                height: 31,
-                width: 100,
-                borderRadius: 32,
-                backgroundColor: '#384151',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-              onPress={() => handlePressStar(4)}>
-              <AirbnbRating
-                showRating={false}
-                count={4}
-                defaultRating={4}
-                size={15}
-                isDisabled={true}
-              />
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              height: 70,
-              width: '100%',
-              justifyContent: 'center',
-              alignItems: 'flex-start',
-              paddingHorizontal: 30,
-            }}>
-            <TouchableOpacity
-              style={{
-                height: 31,
-                width: 123,
-                borderRadius: 32,
-                backgroundColor: '#384151',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-              onPress={() => handlePressStar(5)}>
-              <AirbnbRating
-                showRating={false}
-                count={5}
-                defaultRating={5}
-                size={15}
-                isDisabled={true}
-              />
-            </TouchableOpacity>
-          </View>
-          <Filter onPressShowResult={handleShowResult} />
+          <Filter
+            valueUpperPrice={upperPrice}
+            onChangeTextUpper={handleUpperPrice}
+            valueLowerPrice={lowerPrice}
+            onChangeTextLower={handleLowerPrice}
+            onPressShowResult={handleShowResult}
+            onStarRatingPress={rating =>
+              handlePressStar(rating, steamRatingPercent)
+            }
+          />
         </View>
       </View>
     </LinearGradient>
@@ -189,7 +136,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    height: windowHeight * 0.4,
+    height: 240,
     width: windowWidth,
   },
   headerClose: {
@@ -226,7 +173,7 @@ const styles = StyleSheet.create({
     borderColor: '#474E5B',
   },
   txtReset: {
-    fontFamily: 'Manrope-Light',
+    fontFamily: 'Manrop',
     fontWeight: '500',
     fontSize: 16,
     lineHeight: 21.86,
@@ -235,7 +182,6 @@ const styles = StyleSheet.create({
   middle: {
     flex: 1,
     width: '100%',
-    borderWidth: 1,
   },
 });
 
