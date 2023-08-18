@@ -7,12 +7,16 @@ import {
   StyleSheet,
   StatusBar,
   FlatList,
+  Dimensions,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import {AirbnbRating} from 'react-native-ratings';
 import CardStore from '../components/cards/CardStore';
 import {fetchStore} from '../redux/store/storeSlice';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const formatDate = timestamp => new Date(timestamp * 1000).toLocaleDateString();
 
@@ -62,37 +66,9 @@ const GamesDetails = ({route, navigation}) => {
             </Text>
           </View>
           <View style={styles.storeListContainer}>
-            <View
-              style={{
-                height: 20,
-                width: '100%',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                paddingHorizontal: 20,
-              }}>
-              <Text
-                style={{
-                  fontFamily: 'Manrope',
-                  fontWeight: '800',
-                  fontSize: 16,
-                  lineHeight: 21.86,
-                  letterSpacing: 2,
-                  color: '#FFFFFF',
-                }}>
-                Where to buy it
-              </Text>
-              <Text
-                style={{
-                  fontFamily: 'Manrope',
-                  fontWeight: '400',
-                  fontSize: 13,
-                  lineHeight: 16,
-                  letterSpacing: 2,
-                  color: '#FFFFFF',
-                }}>
-                4 STORE{' '}
-              </Text>
+            <View style={styles.storeListTitleContainer}>
+              <Text style={styles.storeListTitle}>Where to buy it</Text>
+              <Text style={styles.storeListCount}>4 STORES</Text>
             </View>
             <FlatList
               horizontal
@@ -134,15 +110,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   linearGradient: {
-    height: 610,
+    height: windowHeight * 0.9,
     width: '100%',
     borderBottomLeftRadius: 32,
     borderBottomRightRadius: 32,
     overflow: 'hidden',
   },
   storeListContainer: {
-    height: 130,
+    height: windowHeight * 20,
     width: '100%',
+  },
+  storeListTitleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
   },
   storeListTitle: {
     fontFamily: 'Manrope',
@@ -151,28 +133,34 @@ const styles = StyleSheet.create({
     lineHeight: 21.86,
     letterSpacing: 2,
     color: '#FFFFFF',
-    paddingHorizontal: 20,
-    marginBottom: 10,
+  },
+  storeListCount: {
+    fontFamily: 'Manrope',
+    fontWeight: '400',
+    fontSize: 13,
+    lineHeight: 16,
+    letterSpacing: 2,
+    color: '#FFFFFF',
   },
   header: {
-    height: 280,
+    height: windowHeight * 0.35,
     width: '100%',
     position: 'relative',
   },
   backgroundImage: {
     ...StyleSheet.absoluteFillObject,
     width: '100%',
-    height: 210,
+    height: '75%',
     resizeMode: 'cover',
   },
   profileImage: {
-    width: 110,
-    height: 148,
+    width: windowWidth * 0.35,
+    height: windowHeight * 0.2,
     borderRadius: 12,
     position: 'absolute',
-    top: 120,
+    top: windowHeight * 0.16,
     resizeMode: 'contain',
-    left: 15,
+    left: windowWidth * 0.05,
   },
   backButton: {
     height: 30,
@@ -180,19 +168,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    top: 53,
+    top: windowHeight * 0.05,
   },
   arrowIcon: {
     height: 24,
     width: 24,
   },
   middle: {
-    height: 360,
+    height: windowHeight * 0.45,
     width: '100%',
     overflow: 'visible',
   },
   infoContainer: {
-    height: 100,
+    height: windowHeight * 0.15,
     width: '100%',
     paddingHorizontal: 20,
     justifyContent: 'center',
@@ -200,7 +188,7 @@ const styles = StyleSheet.create({
   gameTitle: {
     fontFamily: 'Manrope',
     fontWeight: '300',
-    fontSize: 32,
+    fontSize: 28,
     lineHeight: 32,
     color: '#EBFF01',
   },
@@ -211,14 +199,14 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   priceContainer: {
-    height: 100,
+    height: windowHeight * 0.15,
     width: '100%',
     paddingHorizontal: 20,
   },
   salePrice: {
     fontFamily: 'Manrope',
     fontWeight: '300',
-    fontSize: 32,
+    fontSize: 28,
     lineHeight: 43.7,
     color: '#FFFFFF',
   },
@@ -232,7 +220,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   footer: {
-    height: 100,
+    height: windowHeight * 0.16,
     width: '100%',
     backgroundColor: '#EBFF01',
     position: 'absolute',
@@ -253,8 +241,8 @@ const styles = StyleSheet.create({
     top: 20,
   },
   arrowButton: {
-    height: 50,
-    width: 50,
+    height: windowHeight * 0.08,
+    width: windowHeight * 0.08,
     justifyContent: 'center',
     alignItems: 'center',
     top: 20,
