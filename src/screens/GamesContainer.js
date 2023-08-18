@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -11,18 +11,22 @@ import {
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
-
 import {fetchGames} from '../redux/store/gamesSlice';
 import Card from '../components/cards/Card';
 
-const GamesContainer = ({navigation}) => {
+const GamesContainer = ({navigation, route}) => {
   const dispatch = useDispatch();
   const gamesList = useSelector(state => state.games.gamesList);
   const loading = useSelector(state => state.games.loading);
+  const {isEmptyResult} = route.params || {};
 
   useEffect(() => {
     dispatch(fetchGames());
   }, [dispatch]);
+
+  const renderGameCard = ({item}) => (
+    <Card game={item} navigation={navigation} />
+  );
 
   return (
     <LinearGradient
@@ -46,22 +50,16 @@ const GamesContainer = ({navigation}) => {
             {'\n'}We have just what you're looking for!
           </Text>
         </View>
-        {loading ? (
-          <Text>Loading...</Text>
-        ) : (
-          <FlatList
-            data={gamesList}
-            keyExtractor={item => item.dealID}
-            renderItem={({item}) => (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate('GamesDetails', {game: item})
-                }>
-                <Card game={item} />
-              </TouchableOpacity>
-            )}
-          />
-        )}
+        {isEmptyResult ? (
+          <Text style={styles.emptyResultText}>
+            No results found. Try a different search.
+          </Text>
+        ) : null}
+        <FlatList
+          data={gamesList}
+          keyExtractor={item => item.dealID}
+          renderItem={renderGameCard}
+        />
       </View>
     </LinearGradient>
   );
@@ -99,7 +97,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     color: '#EBFF01',
     fontWeight: '100',
-    fontFamily: 'Manrope-Light',
+    fontFamily: 'Manrope',
     lineHeight: 43.71,
   },
   sliderImage: {
@@ -111,7 +109,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'white',
     fontWeight: '100',
-    fontFamily: 'Manrope-ExtraLight',
+    fontFamily: 'Manrope',
     lineHeight: 24.59,
   },
 });

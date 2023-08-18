@@ -171,6 +171,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     position: 'absolute',
     top: 120,
+    resizeMode: 'contain',
     left: 15,
   },
   backButton: {

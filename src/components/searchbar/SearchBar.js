@@ -10,7 +10,7 @@ import {
 
 const windowWidth = Dimensions.get('window').width;
 
-const SearchBar = ({onChangeText}) => {
+const SearchBar = ({onChangeText, value}) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -19,6 +19,7 @@ const SearchBar = ({onChangeText}) => {
 
       <View style={styles.inputContainer}>
         <TextInput
+          value={value}
           placeholder="Enter title"
           placeholderTextColor={'#8D939B'}
           onChangeText={onChangeText}
@@ -44,7 +45,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   titleSearch: {
-    fontFamily: 'Manrope-Light',
+    fontFamily: 'Manrope',
     fontSize: windowWidth * 0.04,
     fontWeight: '800',
     lineHeight: windowWidth * 0.05,

@@ -1710,6 +1710,11 @@
   "resolved" "https://registry.npmjs.org/@react-native-community/netinfo/-/netinfo-9.4.1.tgz"
   "version" "9.4.1"
 
+"@react-native-community/slider@^4.4.2":
+  "integrity" "sha512-D9bv+3Vd2gairAhnRPAghwccgEmoM7g562pm8i4qB3Esrms5mggF81G3UvCyc0w3jjtFHh8dpQkfEoKiP0NW/Q=="
+  "resolved" "https://registry.npmjs.org/@react-native-community/slider/-/slider-4.4.2.tgz"
+  "version" "4.4.2"
+
 "@react-native-masked-view/masked-view@^0.2.9":
   "integrity" "sha512-Hs4vKBKj+15VxHZHFtMaFWSBxXoOE5Ea8saoigWhahp8Mepssm0ezU+2pTl7DK9z8Y9s5uOl/aPb4QmBZ3R3Zw=="
   "resolved" "https://registry.npmjs.org/@react-native-masked-view/masked-view/-/masked-view-0.2.9.tgz"
@@ -6242,6 +6247,11 @@
   "resolved" "https://registry.npmjs.org/react-native-linear-gradient/-/react-native-linear-gradient-2.8.2.tgz"
   "version" "2.8.2"
 
+"react-native-multi-slider@^0.3.6":
+  "integrity" "sha512-EoTMv2hKjBfJWMRZYp4A0LXg9pBPaMk+rgTXsvBjvI0owFqq8rIrnijO453oLqfbrXD72mBIHLRww0TUMZufdg=="
+  "resolved" "https://registry.npmjs.org/react-native-multi-slider/-/react-native-multi-slider-0.3.6.tgz"
+  "version" "0.3.6"
+
 "react-native-paper@^5.10.1":
   "integrity" "sha512-/VNo9T87dtPBdQQI5CcaXjHtIAmlOoIe60W/iBcwUjZTVKMI///ZxcmxRSkACUYTcwyGAbkjhHHPqN2knrXp9Q=="
   "resolved" "https://registry.npmjs.org/react-native-paper/-/react-native-paper-5.10.1.tgz"
@@ -6250,6 +6260,13 @@
     "@callstack/react-theme-provider" "^3.0.9"
     "color" "^3.1.2"
     "use-latest-callback" "^0.1.5"
+
+"react-native-range-slider@^0.1.2":
+  "integrity" "sha512-EZLOtcnhOcOv4yZtPT826jZknqn+h3zbqM08tc3dFbakBFMoK4aN5GAuHP2RJ3PhMtwzl2h6HzOeFilq8cKaXQ=="
+  "resolved" "https://registry.npmjs.org/react-native-range-slider/-/react-native-range-slider-0.1.2.tgz"
+  "version" "0.1.2"
+  dependencies:
+    "prop-types" "^15.5.10"
 
 "react-native-ratings@^8.1.0":
   "integrity" "sha512-+QOJ4G3NjVkI1D+tk4EGx1dCvVfbD2nQdkrj9cXrcAoEiwmbep4z4bZbCKmWMpQ5h2dqbxABU8/eBnbDmvAc3g=="
